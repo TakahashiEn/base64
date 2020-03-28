@@ -76,6 +76,7 @@ static inline void base64_group_encode(const char *src, char *dst){
     dst[0] = base64_encode_lib[ (uint8_t)src[0] >> 2 ];
     
     // 注意 + - 的优先级 比 & ｜ 要高！！！！！！！！！！！！
+    // notice: " + - " have higher priority than " & | " !!!!!!
     dst[1] = base64_encode_lib[
                                (((uint8_t)src[0] << 4)&0x30) +
                                (((uint8_t)src[1] >> 4)&0x0f) ];
@@ -138,7 +139,6 @@ char *base64_decode(char *src_str, uint32_t src_len, uint32_t *dst_len_ptr){
     if((src_len%4) != 0) return NULL;
     uint32_t count = src_len/4;
     *dst_len_ptr = count * 3;
-    
     char *dst_str = (char *)calloc(*dst_len_ptr, sizeof(char));
     
     for (int i=0; i<count; i++) {
@@ -146,7 +146,6 @@ char *base64_decode(char *src_str, uint32_t src_len, uint32_t *dst_len_ptr){
     }
     
     *dst_len_ptr = *dst_len_ptr - (src_str[src_len-1] == '=');
-
     *dst_len_ptr = *dst_len_ptr - (src_str[src_len-2] == '=');
     
     return dst_str;
